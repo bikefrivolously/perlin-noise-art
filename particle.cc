@@ -19,7 +19,7 @@ void Particle::update(sf::RenderWindow& window)
         current.position.x -= window.getSize().x;
         previous.position.x = current.position.x;
     }
-    else if (current.position.x < 0)
+    else if (current.position.x <= -1)
     {
         current.position.x += window.getSize().x;
         previous.position.x = current.position.x;
@@ -30,7 +30,7 @@ void Particle::update(sf::RenderWindow& window)
         current.position.y -= window.getSize().y;
         previous.position.y = current.position.y;
     }
-    else if (current.position.y < 0)
+    else if (current.position.y <= -1)
     {
         current.position.y += window.getSize().y;
         previous.position.y = current.position.y;

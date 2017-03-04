@@ -34,13 +34,13 @@ int main()
     double xn = 0, yn = 0, zn = 0;
     const double xoffset = 0.05;
     const double yoffset = 0.05;
-    const double zoffset = 0.01;
+    const double zoffset = 0.001;
     
     // Window size
     const int width = 800;
     const int height = 600;
     
-    const int num_particles = 100;
+    const int num_particles = 5000;
     
     const int cell_size = 10;
     const int cols = width / cell_size;
@@ -50,8 +50,8 @@ int main()
     std::random_device rd;
     std::default_random_engine gen(rd());
     // distributions for random x and y coordinates
-    std::uniform_int_distribution<int> rand_x(0, width);
-    std::uniform_int_distribution<int> rand_y(0, height);
+    std::uniform_int_distribution<int> rand_x(0, width-1);
+    std::uniform_int_distribution<int> rand_y(0, height-1);
     // distribution for random hue values
     std::uniform_real_distribution<float> rand_h(0.f, 360.f);
     
@@ -103,7 +103,7 @@ int main()
             for (unsigned int x = 0; x < cols; x++)
             {
                 double n = noise.GetValue(xn, yn, zn);
-                float dir = util::map(n, -1, 1, 0, 360);
+                float dir = util::map(n, -1, 1, 0, 359);
                 
                 forces[y][x].setAngle(dir);
                 //forces[y][x].draw(window);
@@ -119,7 +119,7 @@ int main()
             int gx, gy;
             gx = p->current.position.x / cell_size;
             gy = p->current.position.y / cell_size;
-            p->acceleration = forces[gy][gx].getVector() / (float)cell_size * 1.f;
+            p->acceleration = forces[gy][gx].getVector() / (float)cell_size * 0.5f;
             p->update(window);
             p->draw(window);
         }
