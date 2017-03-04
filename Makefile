@@ -10,7 +10,7 @@ LINK.o = $(LINK.cc)
 COMPILE.cc = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
 
-SRCS=perlin.cc force.cc
+SRCS=perlin.cc force.cc particle.cc
 OBJS=$(subst .cc,.o,$(SRCS))
 
 all: perlin
