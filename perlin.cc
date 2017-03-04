@@ -27,9 +27,7 @@ namespace util {
 
 int main()
 {
-    // Setup noise generator
-    module::Perlin noise;
-    
+  
     // These values are used to compute perlin noise
     double xn = 0, yn = 0, zn = 0;
     const double xoffset = 0.05;
@@ -37,12 +35,12 @@ int main()
     const double zoffset = 0.001;
     
     // Window size
-    const int width = 800;
-    const int height = 600;
+    const int width = 1920;
+    const int height = 1080;
     
     const int num_particles = 5000;
     
-    const int cell_size = 10;
+    const int cell_size = 20;
     const int cols = width / cell_size;
     const int rows = height / cell_size;
     
@@ -55,6 +53,10 @@ int main()
     // distribution for random hue values
     std::uniform_real_distribution<float> rand_h(0.f, 360.f);
     
+
+    // Setup noise generator
+    module::Perlin noise;
+    noise.SetSeed(rand_y(gen));
     
     // Create and initialize the force vectors on a grid layout
     Force forces[rows][cols];
