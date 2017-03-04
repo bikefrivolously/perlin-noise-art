@@ -38,7 +38,7 @@ int main()
     const int width = 1920;
     const int height = 1080;
     
-    const int num_particles = 5000;
+    const int num_particles = 10000;
     
     const int cell_size = 20;
     const int cols = width / cell_size;
@@ -90,6 +90,10 @@ int main()
     
     window.clear();
     
+    sf::Clock clock;
+    sf::Time time;
+    int frames = 0;
+    
     while (window.isOpen())
     {
         sf::Event event;
@@ -128,5 +132,16 @@ int main()
         
         window.display();
         zn += zoffset;
+        
+        // Calculate FPS
+        frames += 1;
+        time += clock.restart();
+        if (time.asSeconds() > 1)
+        {
+            std::cout << 1.f / time.asSeconds() * frames << std::endl;
+            time = sf::Time();
+            frames = 0;
+        }
+        
     }
 }
