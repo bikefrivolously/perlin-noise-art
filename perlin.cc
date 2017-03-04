@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <noise/noise.h>
 
+#include "force.h"
+
 using namespace noise;
 
 double map(double val, double from_min, double from_max, double to_min, double to_max)
@@ -56,13 +58,11 @@ int main()
             for (unsigned int x = 0; x < cols; x++)
             {
                 double n = noise.GetValue(xn, yn, zn);
-                int c = map(n, -1, 1, 0, 255);
+                float dir = map(n, -1, 1, 0, 360);
                 
-                sf::RectangleShape r(sf::Vector2f(cell_size, cell_size));
-                r.setPosition(x*cell_size, y*cell_size);
-                r.setFillColor(sf::Color(c, 0, 0));
+                Force f(sf::Vector2f(x*cell_size, y*cell_size), dir, cell_size);
+                f.draw(window);
                 
-                window.draw(r);
                 xn += xoffset;
             }
             yn += yoffset;
