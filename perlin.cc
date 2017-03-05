@@ -35,12 +35,14 @@ int main()
     const double zoffset = 0.001;
     
     // Window size
-    const int width = 1900;
-    const int height = 1040;
+    constexpr int width = 1600;
+    constexpr int height = 800;
     
-    const int num_particles = 10000;
+    constexpr int num_particles = 5000;
+    constexpr int cell_size = 10;
     
-    const int cell_size = 20;
+    constexpr float flow_strength = 3.f;
+    
     const int cols = width / cell_size;
     const int rows = height / cell_size;
     
@@ -59,6 +61,7 @@ int main()
     noise.SetSeed(rand_y(gen));
     
     // Create and initialize the force vectors on a grid layout
+
     Force forces[rows][cols];
     
     for (unsigned int y = 0; y < rows; y++)
@@ -82,14 +85,14 @@ int main()
         HSVtoRGB(r, g, b, h, s, v);
         
         // Random color for each line (with alpha)
-        //particles[i].current.color = sf::Color(r*255, g*255, b*255, 25);
+        //particles[i].current.color = sf::Color(r*255, g*255, b*255, 10);
         
         // All black with alpha
         particles[i].current.color = sf::Color::Black;
         particles[i].current.color.a = 10;
     }
     
-    sf::RenderWindow window(sf::VideoMode(width, height), "Perlin");
+    sf::RenderWindow window(sf::VideoMode(width, height), "Perlin", sf::Style::Close);
     window.setFramerateLimit(60);
     
     window.clear(sf::Color::White);
@@ -106,6 +109,9 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        
+        //window.clear();
+        
         yn = 0;
         for (unsigned int y = 0; y < rows; y++)
         {
@@ -113,7 +119,7 @@ int main()
             for (unsigned int x = 0; x < cols; x++)
             {
                 double n = noise.GetValue(xn, yn, zn);
-                float dir = util::map(n, -1, 1, 0, 359);
+                float dir = util::map(n, -1, 1, 0, 360);
                 
                 forces[y][x].setAngle(dir);
                 //forces[y][x].draw(window);
@@ -129,7 +135,7 @@ int main()
             int gx, gy;
             gx = p->current.position.x / cell_size;
             gy = p->current.position.y / cell_size;
-            p->acceleration = forces[gy][gx].getVector() / (float)cell_size * 0.5f;
+            p->acceleration = forces[gy][gx].getVector() / (float)cell_size * flow_strength;
             p->update(window);
             p->draw(window);
         }
