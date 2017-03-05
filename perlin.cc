@@ -35,8 +35,8 @@ int main()
     const double zoffset = 0.001;
     
     // Window size
-    const int width = 1920;
-    const int height = 1080;
+    const int width = 1900;
+    const int height = 1040;
     
     const int num_particles = 10000;
     
@@ -81,14 +81,18 @@ int main()
         h = rand_h(gen);
         HSVtoRGB(r, g, b, h, s, v);
         
-        particles[i].current.color = sf::Color(r*255, g*255, b*255, 25);
-        //particles[i].velocity = sf::Vector2f(i*0.01, i*0.2);
+        // Random color for each line (with alpha)
+        //particles[i].current.color = sf::Color(r*255, g*255, b*255, 25);
+        
+        // All black with alpha
+        particles[i].current.color = sf::Color::Black;
+        particles[i].current.color.a = 10;
     }
     
     sf::RenderWindow window(sf::VideoMode(width, height), "Perlin");
     window.setFramerateLimit(60);
     
-    window.clear();
+    window.clear(sf::Color::White);
     
     sf::Clock clock;
     sf::Time time;
