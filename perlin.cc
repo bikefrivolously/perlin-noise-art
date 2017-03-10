@@ -1,3 +1,4 @@
+#include <vector>
 #include <iostream>
 #include <random>
 #include <SFML/Graphics.hpp>
@@ -61,8 +62,7 @@ int main()
     noise.SetSeed(rand_y(gen));
     
     // Create and initialize the force vectors on a grid layout
-
-    Force forces[rows][cols];
+    std::vector< std::vector<Force> > forces(rows, std::vector<Force> (cols, Force()));
     
     for (unsigned int y = 0; y < rows; y++)
     {
