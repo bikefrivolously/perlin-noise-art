@@ -1,3 +1,5 @@
+#include <array>
+#include <vector>
 #include <iostream>
 #include <random>
 #include <SFML/Graphics.hpp>
@@ -10,7 +12,7 @@
 
 using namespace noise;
 
-constexpr int cell_size = 10;
+constexpr int cell_size = 5;
 
 namespace util {
     double map(double val, double from_min, double from_max, double to_min, double to_max)
@@ -77,9 +79,8 @@ int main()
     noise.SetSeed(rand_y(gen));
     
     // Create and initialize the force vectors on a grid layout
-
-    Force forces[rows][cols];
-    sf::Color colours[rows][cols];
+    std::vector< std::vector<Force> > forces(rows, std::vector<Force> (cols, Force()));
+    std::vector< std::vector<sf::Color> > colours(rows, std::vector<sf::Color> (cols, sf::Color()));
     
     const std::string img_name = "KRL-LIZARD-2.png";
     sf::Image img;
