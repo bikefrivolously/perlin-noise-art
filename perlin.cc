@@ -10,6 +10,8 @@
 
 using namespace noise;
 
+constexpr int cell_size = 10;
+
 namespace util {
     double map(double val, double from_min, double from_max, double to_min, double to_max)
     {
@@ -23,23 +25,37 @@ namespace util {
             return to_min;
         return new_val;
     }
+    
+    sf::Color avgColor(std::array<sf::Color, cell_size*cell_size> pixels)
+    {
+        unsigned int red = 0, blue = 0, green = 0;
+        for (const auto& c : pixels)
+        {
+            red += c.r;
+            green += c.g;
+            blue += c.b;
+        }
+        sf::Color avg(red/pixels.size(), green/pixels.size(), blue/pixels.size());
+        
+        return avg;
+    }
 }
 
 int main()
 {
-  
     // These values are used to compute perlin noise
     double xn = 0, yn = 0, zn = 0;
     const double xoffset = 0.05;
     const double yoffset = 0.05;
-    const double zoffset = 0.001;
+    //const double zoffset = 0.001;
+    const double zoffset = 0.01;
     
     // Window size
-    constexpr int width = 1600;
-    constexpr int height = 800;
+    constexpr int width = 1280;
+    constexpr int height = 840;
     
-    constexpr int num_particles = 5000;
-    constexpr int cell_size = 10;
+    constexpr int num_particles = 10000;
+    
     
     constexpr float flow_strength = 3.f;
     
@@ -63,6 +79,11 @@ int main()
     // Create and initialize the force vectors on a grid layout
 
     Force forces[rows][cols];
+    sf::Color colours[rows][cols];
+    
+    const std::string img_name = "KRL-LIZARD-2.png";
+    sf::Image img;
+    img.loadFromFile(img_name);
     
     for (unsigned int y = 0; y < rows; y++)
     {
@@ -71,6 +92,18 @@ int main()
             forces[y][x].setPosition(x * cell_size, y * cell_size);
             forces[y][x].setMagnitude(cell_size);
             forces[y][x].setAngle(0.f);
+            
+            std::array<sf::Color, cell_size*cell_size> pixels;
+            int a = 0;
+            for (unsigned int j = y*cell_size; j < (y+1)*cell_size; j++)
+            {
+                for (unsigned int i = x*cell_size; i < (x+1)*cell_size; i++)
+                {
+                    pixels[a] = img.getPixel(i, j);
+                    a++;
+                }
+            }
+            colours[y][x] = util::avgColor(pixels);
         }
     }
     
@@ -135,6 +168,8 @@ int main()
             int gx, gy;
             gx = p->current.position.x / cell_size;
             gy = p->current.position.y / cell_size;
+            p->current.color = colours[gy][gx];
+            p->current.color.a = 5;
             p->acceleration = forces[gy][gx].getVector() / (float)cell_size * flow_strength;
             p->update(window);
             p->draw(window);
