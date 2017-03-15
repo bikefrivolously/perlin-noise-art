@@ -161,6 +161,8 @@ int main(int argc, char* argv[])
             yn += yoffset;
         }
 
+        sf::VertexArray lines(sf::Lines);
+
         for (int i = 0; i < num_particles; i++)
         {
             Particle *p = &particles[i];
@@ -171,8 +173,12 @@ int main(int argc, char* argv[])
             p->current.color.a = alpha;
             p->acceleration = forces[gy][gx].getVector() / (float)cell_size * flow_strength;
             p->update(window);
-            p->draw(window);
+            std::array<sf::Vertex, 2> line = p->getLine();
+            lines.append(line[0]);
+            lines.append(line[1]);
         }
+
+        window.draw(lines);
 
         //window.display();
         zn += zoffset;

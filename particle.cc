@@ -48,3 +48,11 @@ void Particle::draw(sf::RenderTexture& window)
     line[1] = current;
     window.draw(line, 2, sf::Lines);
 }
+
+std::array<sf::Vertex, 2> Particle::getLine()
+{
+    std::array<sf::Vertex, 2> line;
+    line[0] = previous;
+    line[1] = current;
+    return line;
+}

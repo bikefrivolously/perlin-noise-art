@@ -10,6 +10,7 @@ struct Particle
 
     void update(sf::RenderTexture& window);
     void draw(sf::RenderTexture& window);
+    std::array<sf::Vertex, 2> getLine();
 
     sf::Vertex current;
     sf::Vertex previous;
