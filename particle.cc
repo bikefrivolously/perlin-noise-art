@@ -5,14 +5,14 @@ Particle::Particle()
 }
 
 
-void Particle::update(sf::RenderWindow& window)
+void Particle::update(sf::RenderTexture& window)
 {
     previous.position = current.position;
     previous.color = current.color;
     velocity += acceleration;
     current.position += velocity;
     acceleration *= 0.f;
-    
+
     // Bound the position to the drawable area
     if (current.position.x >= window.getSize().x)
     {
@@ -24,7 +24,7 @@ void Particle::update(sf::RenderWindow& window)
         current.position.x += window.getSize().x;
         previous.position.x = current.position.x;
     }
-    
+
     if (current.position.y >= window.getSize().y)
     {
         current.position.y -= window.getSize().y;
@@ -35,13 +35,13 @@ void Particle::update(sf::RenderWindow& window)
         current.position.y += window.getSize().y;
         previous.position.y = current.position.y;
     }
-    
+
     // Clip the velocity between -2.0 and 2.0
     velocity.x = std::max(-2.f, std::min(velocity.x, 2.f));
     velocity.y = std::max(-2.f, std::min(velocity.y, 2.f));
 }
 
-void Particle::draw(sf::RenderWindow& window)
+void Particle::draw(sf::RenderTexture& window)
 {
     sf::Vertex line[2];
     line[0] = previous;

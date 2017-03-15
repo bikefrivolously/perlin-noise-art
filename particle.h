@@ -7,10 +7,10 @@
 struct Particle
 {
     Particle();
-    
-    void update(sf::RenderWindow& window);
-    void draw(sf::RenderWindow& window);
-    
+
+    void update(sf::RenderTexture& window);
+    void draw(sf::RenderTexture& window);
+
     sf::Vertex current;
     sf::Vertex previous;
     sf::Vector2f velocity;

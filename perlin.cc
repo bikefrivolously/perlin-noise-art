@@ -15,7 +15,7 @@
 
 using namespace noise;
 
-constexpr int cell_size = 5;
+constexpr int cell_size = 10;
 
 namespace util {
     double map(double val, double from_min, double from_max, double to_min, double to_max)
@@ -56,6 +56,10 @@ int main(int argc, char* argv[])
     const std::string img_name = argv[1];
     sf::Image img;
     img.loadFromFile(img_name);
+
+    std::string output_name = "output_cell10_";
+    unsigned int output_index = 1;
+    float output_interval = 30.f;
 
     // These values are used to compute perlin noise
     double xn = 0, yn = 0, zn = 0;
@@ -127,8 +131,8 @@ int main(int argc, char* argv[])
         particles[i].current.position = sf::Vector2f(rand_x(gen), rand_y(gen));
     }
 
-    sf::RenderWindow window(sf::VideoMode(width, height), "Perlin", sf::Style::Close);
-    window.setFramerateLimit(60);
+    sf::RenderTexture window;
+    window.create(width, height);
 
     window.clear(sf::Color::Black);
 
@@ -136,17 +140,11 @@ int main(int argc, char* argv[])
     sf::Time time;
     int frames = 0;
 
-    while (window.isOpen())
+    sf::Clock output_clock;
+    sf::Time output_time;
+
+    while (true)
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        //window.clear();
-
         yn = 0;
         for (unsigned int y = 0; y < rows; y++)
         {
@@ -157,7 +155,6 @@ int main(int argc, char* argv[])
                 float dir = util::map(n, -1, 1, 0, 270);
 
                 forces[y][x].setAngle(dir);
-                //forces[y][x].draw(window);
 
                 xn += xoffset;
             }
@@ -177,7 +174,7 @@ int main(int argc, char* argv[])
             p->draw(window);
         }
 
-        window.display();
+        //window.display();
         zn += zoffset;
 
         // Calculate FPS
@@ -188,6 +185,16 @@ int main(int argc, char* argv[])
             std::cout << 1.f / time.asSeconds() * frames << std::endl;
             time = sf::Time();
             frames = 0;
+        }
+
+        // Periodically write the image to disk
+        output_time += output_clock.restart();
+        if (output_time.asSeconds() >= output_interval) {
+            std::cout << "Writing " << output_name << output_index << ".jpg" << std::endl;
+            window.display();
+            window.getTexture().copyToImage().saveToFile(output_name + std::to_string(output_index) + ".jpg");
+            ++output_index;
+            output_time = sf::Time();
         }
 
     }
