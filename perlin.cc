@@ -47,9 +47,14 @@ int main()
 {
     // These values are used to compute perlin noise
     double xn = 0, yn = 0, zn = 0;
-    const double xoffset = 0.05;
+    
+    // Some good defaults w/ cell size 10  and flow_strength 3.f
+    /*const double xoffset = 0.05;
     const double yoffset = 0.05;
-    //const double zoffset = 0.001;
+    const double zoffset = 0.01;*/
+    
+    const double xoffset = 0.01;
+    const double yoffset = 0.01;
     const double zoffset = 0.01;
     
     // Window size
@@ -57,8 +62,7 @@ int main()
     constexpr int height = 840;
     
     constexpr int num_particles = 10000;
-    
-    
+    constexpr int alpha = 10;    
     constexpr float flow_strength = 3.f;
     
     const int cols = width / cell_size;
@@ -123,13 +127,13 @@ int main()
         
         // All black with alpha
         particles[i].current.color = sf::Color::Black;
-        particles[i].current.color.a = 10;
+        particles[i].current.color.a = alpha;
     }
     
     sf::RenderWindow window(sf::VideoMode(width, height), "Perlin", sf::Style::Close);
     window.setFramerateLimit(60);
     
-    window.clear(sf::Color::White);
+    window.clear(sf::Color::Black);
     
     sf::Clock clock;
     sf::Time time;
@@ -153,7 +157,7 @@ int main()
             for (unsigned int x = 0; x < cols; x++)
             {
                 double n = noise.GetValue(xn, yn, zn);
-                float dir = util::map(n, -1, 1, 0, 360);
+                float dir = util::map(n, -1, 1, 0, 270);
                 
                 forces[y][x].setAngle(dir);
                 //forces[y][x].draw(window);
