@@ -11,7 +11,7 @@
 #include "force.h"
 #include "particle.h"
 
-#include "util.h"
+#include "colour.h"
 
 using namespace noise;
 

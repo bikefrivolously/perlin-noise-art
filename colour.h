@@ -1,3 +1,5 @@
+#pragma once
+
 // Copyright (c) 2014, Jan Winkler <winkler@cs.uni-bremen.de>
 // All rights reserved.
 //
@@ -27,33 +29,32 @@
 
 /* Author: Jan Winkler */
 
+// Removed using namespace std from the original code to avoid using this
+// namespace in all files including this header
 
 #include <cstdlib>
 #include <cmath>
 
-using namespace std;
-
-
 /*! \brief Convert RGB to HSV color space
-  
+
   Converts a given set of RGB values `r', `g', `b' into HSV
   coordinates. The input RGB values are in the range [0, 1], and the
   output HSV values are in the ranges h = [0, 360], and s, v = [0,
   1], respectively.
-  
+
   \param fR Red component, used as input, range: [0, 1]
   \param fG Green component, used as input, range: [0, 1]
   \param fB Blue component, used as input, range: [0, 1]
   \param fH Hue component, used as output, range: [0, 360]
   \param fS Hue component, used as output, range: [0, 1]
   \param fV Hue component, used as output, range: [0, 1]
-  
+
 */
 void RGBtoHSV(float& fR, float& fG, float fB, float& fH, float& fS, float& fV) {
-  float fCMax = max(max(fR, fG), fB);
-  float fCMin = min(min(fR, fG), fB);
+  float fCMax = std::max(std::max(fR, fG), fB);
+  float fCMin = std::min(std::min(fR, fG), fB);
   float fDelta = fCMax - fCMin;
-  
+
   if(fDelta > 0) {
     if(fCMax == fR) {
       fH = 60 * (fmod(((fG - fB) / fDelta), 6));
@@ -62,20 +63,20 @@ void RGBtoHSV(float& fR, float& fG, float fB, float& fH, float& fS, float& fV) {
     } else if(fCMax == fB) {
       fH = 60 * (((fR - fG) / fDelta) + 4);
     }
-    
+
     if(fCMax > 0) {
       fS = fDelta / fCMax;
     } else {
       fS = 0;
     }
-    
+
     fV = fCMax;
   } else {
     fH = 0;
     fS = 0;
     fV = fCMax;
   }
-  
+
   if(fH < 0) {
     fH = 360 + fH;
   }
@@ -83,26 +84,26 @@ void RGBtoHSV(float& fR, float& fG, float fB, float& fH, float& fS, float& fV) {
 
 
 /*! \brief Convert HSV to RGB color space
-  
+
   Converts a given set of HSV values `h', `s', `v' into RGB
   coordinates. The output RGB values are in the range [0, 1], and
   the input HSV values are in the ranges h = [0, 360], and s, v =
   [0, 1], respectively.
-  
+
   \param fR Red component, used as output, range: [0, 1]
   \param fG Green component, used as output, range: [0, 1]
   \param fB Blue component, used as output, range: [0, 1]
   \param fH Hue component, used as input, range: [0, 360]
   \param fS Hue component, used as input, range: [0, 1]
   \param fV Hue component, used as input, range: [0, 1]
-  
+
 */
 void HSVtoRGB(float& fR, float& fG, float& fB, float& fH, float& fS, float& fV) {
   float fC = fV * fS; // Chroma
   float fHPrime = fmod(fH / 60.0, 6);
   float fX = fC * (1 - fabs(fmod(fHPrime, 2) - 1));
   float fM = fV - fC;
-  
+
   if(0 <= fHPrime && fHPrime < 1) {
     fR = fC;
     fG = fX;
@@ -132,7 +133,7 @@ void HSVtoRGB(float& fR, float& fG, float& fB, float& fH, float& fS, float& fV) 
     fG = 0;
     fB = 0;
   }
-  
+
   fR += fM;
   fG += fM;
   fB += fM;
