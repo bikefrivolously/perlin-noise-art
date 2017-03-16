@@ -12,39 +12,11 @@
 #include "particle.h"
 
 #include "colour.h"
+#include "util.h"
 
 using namespace noise;
 
 constexpr int cell_size = 10;
-
-namespace util {
-    double map(double val, double from_min, double from_max, double to_min, double to_max)
-    {
-        double from_range, to_range;
-        from_range = from_max - from_min;
-        to_range = to_max - to_min;
-        double new_val = (((val - from_min) * to_range) / from_range) + to_min;
-        if (new_val > to_max)
-            return to_max;
-        if (new_val < to_min)
-            return to_min;
-        return new_val;
-    }
-
-    sf::Color avgColor(std::array<sf::Color, cell_size*cell_size> pixels)
-    {
-        unsigned int red = 0, blue = 0, green = 0;
-        for (const auto& c : pixels)
-        {
-            red += c.r;
-            green += c.g;
-            blue += c.b;
-        }
-        sf::Color avg(red/pixels.size(), green/pixels.size(), blue/pixels.size());
-
-        return avg;
-    }
-}
 
 int main(int argc, char* argv[])
 {
@@ -59,7 +31,7 @@ int main(int argc, char* argv[])
 
     std::string output_name = "output_cell10_";
     unsigned int output_index = 1;
-    float output_interval = 30.f;
+    float output_interval = 5.f;
 
     // These values are used to compute perlin noise
     double xn = 0, yn = 0, zn = 0;
@@ -110,14 +82,13 @@ int main(int argc, char* argv[])
             forces[y][x].setMagnitude(cell_size);
             forces[y][x].setAngle(0.f);
 
-            std::array<sf::Color, cell_size*cell_size> pixels;
-            int a = 0;
+            std::vector<sf::Color> pixels;
+
             for (unsigned int j = y*cell_size; j < (y+1)*cell_size; j++)
             {
                 for (unsigned int i = x*cell_size; i < (x+1)*cell_size; i++)
                 {
-                    pixels[a] = img.getPixel(i, j);
-                    a++;
+                    pixels.push_back(img.getPixel(i, j));
                 }
             }
             colours[y][x] = util::avgColor(pixels);
