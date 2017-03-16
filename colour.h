@@ -57,7 +57,7 @@ void RGBtoHSV(float& fR, float& fG, float fB, float& fH, float& fS, float& fV) {
 
   if(fDelta > 0) {
     if(fCMax == fR) {
-      fH = 60 * (fmod(((fG - fB) / fDelta), 6));
+      fH = 60 * (std::fmod(((fG - fB) / fDelta), 6));
     } else if(fCMax == fG) {
       fH = 60 * (((fB - fR) / fDelta) + 2);
     } else if(fCMax == fB) {
@@ -100,8 +100,8 @@ void RGBtoHSV(float& fR, float& fG, float fB, float& fH, float& fS, float& fV) {
 */
 void HSVtoRGB(float& fR, float& fG, float& fB, float& fH, float& fS, float& fV) {
   float fC = fV * fS; // Chroma
-  float fHPrime = fmod(fH / 60.0, 6);
-  float fX = fC * (1 - fabs(fmod(fHPrime, 2) - 1));
+  float fHPrime = std::fmod(fH / 60.0, 6);
+  float fX = fC * (1 - std::fabs(std::fmod(fHPrime, 2) - 1));
   float fM = fV - fC;
 
   if(0 <= fHPrime && fHPrime < 1) {
