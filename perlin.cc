@@ -16,8 +16,6 @@
 
 using namespace noise;
 
-constexpr int cell_size = 10;
-
 int main(int argc, char* argv[])
 {
     if (argc != 2) {
@@ -29,10 +27,6 @@ int main(int argc, char* argv[])
     sf::Image img;
     img.loadFromFile(img_name);
 
-    std::string output_name = "output_cell10_";
-    unsigned int output_index = 1;
-    float output_interval = 5.f;
-
     // These values are used to compute perlin noise
     double xn = 0, yn = 0, zn = 0;
 
@@ -41,21 +35,27 @@ int main(int argc, char* argv[])
     const double yoffset = 0.05;
     const double zoffset = 0.01;*/
 
+    // Parameters for image file creation
+    std::string output_name = "output_cell10_";
+    unsigned int output_index = 1;
+    float output_interval = 5.f;
+
+    // Parameters for Perlin noise generation
     const double xoffset = 0.01;
     const double yoffset = 0.01;
     const double zoffset = 0.01;
 
+    // Parameters for particles and grid
+    constexpr int cell_size = 10;
     constexpr int num_particles = 10000;
     constexpr int alpha = 10;
     constexpr float flow_strength = 3.f;
 
-    // Window size
     int width = img.getSize().x;
     int height = img.getSize().y;
 
     const unsigned int cols = width / cell_size;
     const unsigned int rows = height / cell_size;
-
     width = cols * cell_size;
     height = rows * cell_size;
 
@@ -70,8 +70,9 @@ int main(int argc, char* argv[])
     module::Perlin noise;
     noise.SetSeed(rand_y(gen));
 
-    // Create and initialize the force vectors on a grid layout
+    // Create a vector of vectors to hold the Force object for each square
     std::vector< std::vector<Force> > forces(rows, std::vector<Force> (cols, Force()));
+    // Create a vector of vectors to hold the average colour of each square
     std::vector< std::vector<sf::Color> > colours(rows, std::vector<sf::Color> (cols, sf::Color()));
 
     for (unsigned int y = 0; y < rows; y++)
@@ -82,8 +83,9 @@ int main(int argc, char* argv[])
             forces[y][x].setMagnitude(cell_size);
             forces[y][x].setAngle(0.f);
 
+            // Get the value of each pixel in the current grid square
+            // Then find the average colour of that square
             std::vector<sf::Color> pixels;
-
             for (unsigned int j = y*cell_size; j < (y+1)*cell_size; j++)
             {
                 for (unsigned int i = x*cell_size; i < (x+1)*cell_size; i++)
