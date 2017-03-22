@@ -2,8 +2,8 @@ DEPDIR = .d
 $(shell mkdir -p $(DEPDIR) >/dev/null)
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
-CXXFLAGS = -g -Og -Wall -Wpedantic -std=c++14
-#CXXFLAGS = -g -Wall -Wpedantic -std=c++14
+#CXXFLAGS = -g -Og -Wall -Wpedantic -std=c++14
+CXXFLAGS = -O3 -Wall -Wpedantic -std=c++14
 
 LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system -lnoise
 
