@@ -7,7 +7,7 @@ https://www.youtube.com/user/shiffman
 https://www.youtube.com/watch?v=BjoM9oKOAKY
 
 This program takes an image as input, and periodically generates a new image, which is the result of tracing particles flowing
-over the original. The Daniel's video explains it much better than I can.
+over the original. Daniel's video explains it much better than I can.
 
 **Note: the current version of this program will run infinitely.
 Make sure to stop it or you will eventually fill your drive with the generated images!**
